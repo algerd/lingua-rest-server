@@ -29,7 +29,7 @@ public class MultitenantFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {      
         multitenantData.setMultitenantFlag(true);
-        logger.info("RequestFilter path: {}", ((HttpServletRequest)request).getServletPath());
+        logger.info("MultitenantFilter path: {}", ((HttpServletRequest)request).getServletPath());
         chain.doFilter(request, response);             
     }
 
