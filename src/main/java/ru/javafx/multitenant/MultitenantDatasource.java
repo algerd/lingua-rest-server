@@ -14,7 +14,7 @@ import ru.javafx.entity.User;
 
 public class MultitenantDatasource extends AbstractDataSource {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     
     private MultitenantData multitenantData;      
     private Map<Object, DataSource> resolvedDataSources;    
@@ -26,16 +26,19 @@ public class MultitenantDatasource extends AbstractDataSource {
     }  
     
     protected Object determineCurrentLookupKey() {  
+        if (!initialized) {
+            initialized = true;
+            return null;
+        }
         
         Authentication authentication;
-        if (initialized && (authentication = SecurityContextHolder.getContext().getAuthentication()) != null && authentication.isAuthenticated()) {
+        if ((authentication = SecurityContextHolder.getContext().getAuthentication()) != null && authentication.isAuthenticated()) {
             logger.info("Multitenant flag: {}", multitenantData.isMultitenantFlag());            
 
             return !multitenantData.isMultitenantFlag() ? 
                     multitenantData.getMultitenantId() : 
                     ((User) authentication.getPrincipal()).getId();
         }        
-        initialized = true;
         return null;
     }
 

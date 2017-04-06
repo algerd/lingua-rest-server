@@ -33,7 +33,8 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {      
         httpSecurity.csrf().disable()
             .authorizeRequests()       
-            //.antMatchers(basePath + "/authorities/**").hasAuthority("ADMIN")            
+            //.antMatchers(basePath + "/authorities/**").hasAuthority("ADMIN") 
+            .antMatchers("/regitrationConfirm", "/regitrationConfirm**").permitAll()    
             .antMatchers(basePath + "/users/**", basePath + "/users**").permitAll()    
             .anyRequest().authenticated() 
             //для тестирования  

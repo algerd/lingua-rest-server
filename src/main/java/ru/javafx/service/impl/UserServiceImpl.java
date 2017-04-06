@@ -2,6 +2,7 @@ package ru.javafx.service.impl;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.javafx.entity.Authority;
 import ru.javafx.entity.User;
+import ru.javafx.entity.VerificationToken;
 import ru.javafx.repository.AuthorityRepository;
 import ru.javafx.repository.UserRepository;
+import ru.javafx.repository.VerificationTokenRepository;
 import ru.javafx.service.UserService;
 
 @Service
@@ -24,6 +27,9 @@ public class UserServiceImpl implements UserService {
        
     @Autowired
     private AuthorityRepository authorityRepository;
+    
+    @Autowired
+    private VerificationTokenRepository tokenRepository;
     
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -66,5 +72,22 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByIp(user.getIp());
     }
     
+    @Override
+    public User findUserByToken(String verificationToken) {
+        return tokenRepository.findByToken(verificationToken).getUser();
+    }
+    
+    @Override
+    public VerificationToken getVerificationToken(String VerificationToken) {
+        return tokenRepository.findByToken(VerificationToken);
+    }
+    
+    @Override
+    public String createVerificationToken(User user) {
+        String token = UUID.randomUUID().toString();
+        VerificationToken myToken = new VerificationToken(token, user);
+        tokenRepository.save(myToken);
+        return token;
+    }
     
 }

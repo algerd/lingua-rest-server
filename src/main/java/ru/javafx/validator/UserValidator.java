@@ -1,11 +1,11 @@
 
 package ru.javafx.validator;
 
-import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import ru.javafx.entity.User;
+import ru.javafx.mail.RegistrationMailService;
 import ru.javafx.multitenant.MultitenantCreateService;
 import ru.javafx.repository.UserRepository;
 import ru.javafx.service.UserService;
@@ -19,6 +19,8 @@ public class UserValidator extends BaseRequestValidator {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RegistrationMailService registrationMailService;
     @Autowired
     private MultitenantCreateService multitenantCreateService;
     
@@ -48,11 +50,14 @@ public class UserValidator extends BaseRequestValidator {
             user.setAccountNonExpired(true);
             user.setAccountNonLocked(true);
             user.setCredentialsNonExpired(true);
-            user.setEnabled(true);           
-            user.getAuthorities().add(userService.getAuthority("USER")); 
-            user.setCreated(LocalDateTime.now());
-            user.setLastVisited(LocalDateTime.now());
-            userService.save(user);       
+            // изменить после подтверждения регистрации по почте
+            user.setEnabled(false);           
+            user.getAuthorities().add(userService.getAuthority("USER"));            
+            userService.save(user);
+            
+            registrationMailService.sendHtmlMessage(user);
+            //registrationMailService.sendSimpleMessage(user);           
+                    
             multitenantCreateService.createTenant(user.getId());
         }  
     }
