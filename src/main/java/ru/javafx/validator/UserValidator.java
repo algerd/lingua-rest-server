@@ -11,7 +11,7 @@ import ru.javafx.repository.UserRepository;
 import ru.javafx.service.UserService;
 
 @Component
-public class UserValidator extends BaseRequestValidator {
+public class UserValidator extends BaseRestValidator {
 
     private final int MAX_COUNT_IP_FOR_USER = 200;    
     
@@ -50,15 +50,16 @@ public class UserValidator extends BaseRequestValidator {
             user.setAccountNonExpired(true);
             user.setAccountNonLocked(true);
             user.setCredentialsNonExpired(true);
-            // изменить после подтверждения регистрации по почте
+            //enable after confirm registration in mail
             user.setEnabled(false);           
             user.getAuthorities().add(userService.getAuthority("USER"));            
             userService.save(user);
             
             registrationMailService.sendHtmlMessage(user);
             //registrationMailService.sendSimpleMessage(user);           
-                    
-            multitenantCreateService.createTenant(user.getId());
+
+            // Сделать в клиенте при получении 201 во время регистрации - выводить сообщение о необходимости подтверждения
+            // Или включать браузер в клиенте с предложением подтвердить пароль 
         }  
     }
     

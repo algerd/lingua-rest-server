@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS verification_token;
 DROP TABLE IF EXISTS users_authorities;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS authorities;

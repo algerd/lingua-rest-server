@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-public abstract class BaseRequestValidator implements Validator {
+public abstract class BaseRestValidator implements Validator {
     
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     

@@ -30,7 +30,7 @@ public class VerificationToken implements Serializable  {
     private User user;
     
     @Column(name = "expiry_date", nullable = false)
-    private LocalDateTime expiry_date = LocalDateTime.now();
+    private LocalDateTime expiryDate = LocalDateTime.now();
     
     public VerificationToken() {       
     }
@@ -64,17 +64,17 @@ public class VerificationToken implements Serializable  {
         this.user = user;
     }
 
-    public LocalDateTime getExpiry_date() {
-        return expiry_date;
+    public LocalDateTime getExpiryDate() {
+        return expiryDate;
     }
 
-    public void setExpiry_date(LocalDateTime expiry_date) {
-        this.expiry_date = expiry_date;
+    public void setExpiryDate(LocalDateTime expiryDate) {
+        this.expiryDate = expiryDate;
     }
 
     @Override
     public String toString() {
-        return "VerificationToken{" + "id=" + id + ", token=" + token + ", user=" + user + ", expiry_date=" + expiry_date + '}';
+        return "VerificationToken{" + "id=" + id + ", token=" + token + ", user=" + user + ", expiry_date=" + expiryDate + '}';
     }
         
 }

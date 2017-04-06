@@ -34,7 +34,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
         httpSecurity.csrf().disable()
             .authorizeRequests()       
             //.antMatchers(basePath + "/authorities/**").hasAuthority("ADMIN") 
-            .antMatchers("/regitrationConfirm", "/regitrationConfirm**").permitAll()    
+            .antMatchers("/confirmRegistration/", "/confirmRegistration/**").permitAll()    
             .antMatchers(basePath + "/users/**", basePath + "/users**").permitAll()    
             .anyRequest().authenticated() 
             //для тестирования  

@@ -8,7 +8,7 @@ import ru.javafx.entity.Word;
 import ru.javafx.repository.WordRepository;
 
 @Component
-public class WordValidator extends BaseRequestValidator {
+public class WordValidator extends BaseRestValidator {
        
     @Autowired
     private WordRepository wordRepository;
