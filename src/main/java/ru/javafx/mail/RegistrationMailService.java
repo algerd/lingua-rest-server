@@ -2,7 +2,6 @@
 package ru.javafx.mail;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.Map;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -20,6 +19,7 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import java.util.HashMap;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
 import org.springframework.mail.MailException;
@@ -40,6 +40,8 @@ public class RegistrationMailService {
 	private  JavaMailSender  javaMailSender;
     @Autowired
 	private  Configuration  freemarkerConfiguration;
+    @Autowired
+    private HttpServletRequest servletRequest;
     
     @Value("${mail.default-encoding}")   
     private String defaultEncoding;
@@ -48,7 +50,7 @@ public class RegistrationMailService {
     private String mailFrom;
     
     @Value("${mail.verification-link}")
-    private String verificationLink;
+    private String verificationLink;    
     
     public void sendHtmlMessage(User user) {
         try {                                  
@@ -74,10 +76,11 @@ public class RegistrationMailService {
 	private String generateContent(User user) throws MessagingException {
 
 		try {
-			//Map context = Collections.singletonMap("userName", user.getUsername());
+            String link = "http://" + servletRequest.getServerName() + ":" + servletRequest.getServerPort() + "/" + verificationLink + "/" + userService.createVerificationToken(user);
+            //logger.info("confirmLink: {}", link);
             Map<String, String> context = new HashMap<>();
             context.put("userName", user.getUsername());
-            context.put("confirmLink", verificationLink + userService.createVerificationToken(user));
+            context.put("confirmLink", link);
 			Template template = freemarkerConfiguration.getTemplate("mailTemplate.ftl", defaultEncoding);
 			return FreeMarkerTemplateUtils.processTemplateIntoString(template, context);
             
@@ -96,8 +99,9 @@ public class RegistrationMailService {
 		mailMessage.setTo(user.getMail());
         mailMessage.setReplyTo(user.getMail());
 		mailMessage.setSubject("Registration");
+        String link = "http://" + servletRequest.getServerName() + ":" + servletRequest.getServerPort() + "/" + verificationLink + "/" + userService.createVerificationToken(user);
 		mailMessage.setText("Hello " + user.getUsername() + 
-            "\n Confirm registration: " + verificationLink + userService.createVerificationToken(user));
+            "\n Confirm registration: " +  link);
 		javaMailSender.send(mailMessage);
 	}
     

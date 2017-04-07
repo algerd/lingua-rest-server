@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.PropertySources;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,10 @@ import ru.javafx.repository.VerificationTokenRepository;
 import ru.javafx.service.UserService;
 
 @RestController
+@PropertySources({
+	@PropertySource(value="classpath:mail.properties", ignoreResourceNotFound=true),
+	@PropertySource(value="classpath:config/mail.properties", ignoreResourceNotFound=true)
+})
 public class RegistrationController {
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -35,8 +41,8 @@ public class RegistrationController {
     private MessageSource messageSource;
     @Autowired
     private MultitenantCreateService multitenantCreateService;
-    
-    @RequestMapping(value = "/confirmRegistration/{token}", method = RequestMethod.GET)
+     
+    @RequestMapping(value = "/${mail.verification-link}/{token}", method = RequestMethod.GET)
     public ResponseEntity<String> confirmRegistration(@PathVariable("token") String token) {
         
         Locale locale = LocaleContextHolder.getLocale(); 
