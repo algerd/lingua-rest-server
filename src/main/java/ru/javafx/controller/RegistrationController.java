@@ -2,6 +2,7 @@
 package ru.javafx.controller;
 
 import java.util.Locale;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -67,5 +69,22 @@ public class RegistrationController {
         }           
         return new ResponseEntity<>(message, HttpStatus.OK);
     }
+    /*
+    @RequestMapping(value = "/user/resendRegistrationToken/{token}", method = RequestMethod.GET)
+    @ResponseBody
+    public GenericResponse resendRegistrationToken(@PathVariable("token") String token) {
+        VerificationToken newToken = userService.generateNewVerificationToken(token);
 
+        User user = userService.getUser(newToken.getToken());
+        String appUrl = 
+          "http://" + request.getServerName() + 
+          ":" + request.getServerPort() + 
+          request.getContextPath();
+        SimpleMailMessage email = 
+          constructResendVerificationTokenEmail(appUrl, request.getLocale(), newToken, user);
+        mailSender.send(email);
+
+        return new GenericResponse(messages.getMessage("message.resendToken", null, request.getLocale()));
+    }
+    */
 }
